@@ -1,0 +1,10 @@
+.bookform__field {
+  width: 99%;
+  background-color: transparent;
+  border-radius: 4px;
+  outline: none;
+  font-size: 20px;
+  /* border-color: rgb(133, 133, 133); */
+  /* color: black; */
+  /* placeholder color */
+}

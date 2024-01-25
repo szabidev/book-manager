@@ -1,92 +1,68 @@
-import { FC } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import AppBar from "@mui/material/AppBar";
-import TextField from "@mui/material/TextField";
-import { Search, AutoStories } from "@mui/icons-material";
-import { styled } from "@mui/material/styles";
-import { Link } from "@mui/material";
+import { AutoStories } from "@mui/icons-material";
 
-import "../../../shared/variables.css";
+import SearchBar from "../../Forms/SearchBar/SearchBar";
+import { StyledAppBar, StyledLink } from "../../../styles/HeaderStyles";
 import "./Header.css";
+import "../../../shared/variables.css";
 
-const styledAppBar = {
-  width: "100%",
-  //   check the height of the header / 82
-  height: "92px",
-  borderBottom: "2px solid var(--gray)",
-  diplay: "flex",
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space evenly",
-};
+interface HeaderProps {
+  onSearchSubmit: (searchTerm: string) => void;
+}
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  cursor: "pointer",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
+const Header = ({ onSearchSubmit }: HeaderProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
 
-// apply pointer cursor
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  fontWeight: "400",
-  letterSpacing: "1px",
-  cursor: "pointer",
-  width: "100%",
-  ".Mui-focused .MuiOutlinedInput-notchedOutline": {
-    border: "none",
-  },
-  "& .MuiInputBase-input": {
-    color: "var(--gray)",
-    letterSpacing: "1px",
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(0.5)})`,
-    transition: theme.transitions.create("width"),
-    [theme.breakpoints.up("sm")]: {
-      width: "25ch",
-    },
-    border: "none",
-  },
-  "& .MuiInputBase-input::placeholder": {
-    color: "var(--white)",
-  },
-}));
+  const isFavoritesPage = location.pathname === "/favorit";
+  const isBookManagerPage = location.pathname === "/manager";
+  const isBookListPage = !isFavoritesPage && !isBookManagerPage;
 
-const StyledLink = styled(Link)(() => ({
-  textDecoration: "none",
-  margin: "0 10px",
-  fontSize: "20px",
-  color: "var(--gray)",
-  cursor: "pointer",
-  fontWeight: 200,
-  letterSpacing: "1px",
-  "&:hover": {
-    color: "var(--white)",
-  },
-}));
+  const handleLogoClick = () => {
+    navigate("/");
+  };
 
-const Header: FC = () => {
   return (
-    <AppBar sx={styledAppBar} color="transparent">
-      <div className="search">
-        <SearchIconWrapper>
-          <Search sx={{ color: "var(--gray)" }} />
-          <StyledTextField placeholder="Search…" focused />
-        </SearchIconWrapper>
-      </div>
-      <div className="logo">
+    <StyledAppBar color="transparent">
+      <SearchBar onSearchSubmit={onSearchSubmit} />
+      <div className="logo" onClick={handleLogoClick}>
         <AutoStories sx={{ color: "var(--gray)", fontSize: 40 }} />
         <p className="logo__name">My Library</p>
       </div>
       <div className="menu__items">
-        {/* maker routings */}
-        <StyledLink className="item">Favorites</StyledLink>
-        <StyledLink className="item">Book List</StyledLink>
-        <StyledLink className="item">Book Manager</StyledLink>
+        {isFavoritesPage && (
+          <>
+            <StyledLink to="/manager" className="item">
+              Book Manager
+            </StyledLink>
+            <StyledLink to="/" className="item">
+              Book List
+            </StyledLink>
+          </>
+        )}
+        {isBookManagerPage && (
+          <>
+            <StyledLink to="/favorit" className="item">
+              Favorites
+            </StyledLink>
+            <StyledLink to="/" className="item">
+              Book List
+            </StyledLink>
+          </>
+        )}
+        {isBookListPage && (
+          <>
+            <StyledLink to="/favorit" className="item">
+              Favorites
+            </StyledLink>
+            <StyledLink to="/manager" className="item">
+              Book Manager
+            </StyledLink>
+          </>
+        )}
       </div>
-    </AppBar>
+    </StyledAppBar>
   );
 };
 
