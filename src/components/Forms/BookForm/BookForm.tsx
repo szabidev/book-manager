@@ -1,8 +1,8 @@
-import { useEffect } from "react";
 import { Form, useFormik } from "formik";
 import * as Yup from "yup";
+
 import { Button, Grid } from "@mui/material";
-// import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+
 import BookFormFields from "../BookFormFields/BookFormFields";
 
 interface FormValues {
@@ -10,8 +10,7 @@ interface FormValues {
   author: string;
   description: string;
   genre: string;
-  // id: string;
-  url?: string;
+  id?: string;
 }
 
 interface BookFormProps {
@@ -38,7 +37,7 @@ const BookForm = ({ initialValues, onSubmit }: BookFormProps) => {
   return (
     <Form onSubmit={formik.handleSubmit}>
       <Grid container spacing={2}>
-        <BookFormFields />
+        <BookFormFields isSubmitting={formik.isSubmitting} />
         <Grid item xs={12}>
           <Button type="submit" variant="contained" color="primary">
             Submit

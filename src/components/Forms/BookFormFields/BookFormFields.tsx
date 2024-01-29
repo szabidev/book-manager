@@ -1,4 +1,4 @@
-import { ErrorMessage, Field, useFormikContext } from "formik";
+import { Field, useFormikContext } from "formik";
 
 import {
   StyledBox,
@@ -7,9 +7,16 @@ import {
 
 import "./BookFormFields.css";
 import "../../../shared/variables.css";
+import { Book } from "../../BookList/BookList";
 
-const BookFormFields = () => {
-  const { errors, touched, isSubmitting } = useFormikContext();
+interface BookFormFieldsProps {
+  isSubmitting: boolean;
+  // editBook: (book: Book) => void;
+  // removeBook: (id: number) => void;
+}
+
+const BookFormFields = ({ isSubmitting }: BookFormFieldsProps) => {
+  const { errors, touched } = useFormikContext();
 
   return (
     <StyledBox>
@@ -46,14 +53,6 @@ const BookFormFields = () => {
         placeholder="Book description..."
         as="textarea"
         rows={6}
-      />
-      <Field
-        component={StyledTextField}
-        name="url"
-        id="url"
-        label="URL"
-        type="text"
-        // multiline
       />
     </StyledBox>
   );

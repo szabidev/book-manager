@@ -29,8 +29,6 @@ const SearchBar = ({ onSearchSubmit }: SearchBarProps) => {
     formik.handleSubmit();
   };
 
-  console.log(formik);
-
   return (
     <form onSubmit={formik.handleSubmit} className="search">
       <SearchIconWrapper>
