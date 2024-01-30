@@ -2,13 +2,25 @@ import { useState } from "react";
 
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { Button, IconButton, Modal, Typography } from "@mui/material";
+import {
+  Button,
+  Divider,
+  IconButton,
+  Modal,
+  Typography,
+  TextField,
+} from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
-import { StyledCard, StyledCardActions } from "../../styles/BookListItemStyles";
+import {
+  StyledCard,
+  StyledCardActions,
+  StyledModalCard,
+  StyledModalCardActions,
+} from "../../styles/BookListItemStyles";
 import { Book } from "../BookList/BookList";
 import { mutate } from "swr";
 
@@ -23,6 +35,14 @@ const BookListItem = ({ bookItem, onEdit, onDelete }: BookListItemProps) => {
   const [isFavorit, setIsFavorit] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+  // for edit - delete it
+  const [editedTitle, setEditedTitle] = useState<string>(bookItem.title);
+  const [editedAuthor, setEditedAuthor] = useState<string>(bookItem.author);
+  const [editedDescription, setEditedDescription] = useState<string>(
+    bookItem.description
+  );
+  const [editedGenre, setEditedGenre] = useState<string>(bookItem.genre);
+
   const handleCheckboxChange = () => {
     setChecked(!isChecked);
   };
@@ -31,16 +51,23 @@ const BookListItem = ({ bookItem, onEdit, onDelete }: BookListItemProps) => {
     setIsFavorit(!isFavorit);
   };
 
-  const handleEditClick = () => {
-    // Open the modal on edit button click
+  const handleOpenModal = () => {
     setIsModalOpen(true);
   };
 
-  const handleEdit = () => {
-    // Close the modal after editing
+  const handleCloseModal = () => {
     setIsModalOpen(false);
-    // Call the onEdit callback with the updated book details
-    onEdit(bookItem);
+  };
+
+  const handleEdit = () => {
+    setIsModalOpen(false);
+    const updatedBook: Book = {
+      ...bookItem,
+      title: editedTitle,
+      author: editedAuthor,
+      description: editedDescription,
+    };
+    onEdit(updatedBook);
     mutate("/books");
   };
 
@@ -50,14 +77,9 @@ const BookListItem = ({ bookItem, onEdit, onDelete }: BookListItemProps) => {
     mutate("/books");
   };
 
-  const handleCloseModal = () => {
-    // Close the modal
-    setIsModalOpen(false);
-  };
-
   return (
     <>
-      <StyledCard onClick={handleEditClick}>
+      <StyledCard onClick={handleOpenModal}>
         <CardHeader
           title={bookItem.title}
           subheader={
@@ -89,18 +111,62 @@ const BookListItem = ({ bookItem, onEdit, onDelete }: BookListItemProps) => {
         </StyledCardActions>
       </StyledCard>
       <Modal open={isModalOpen} onClose={handleCloseModal}>
-        <div>
-          <Typography variant="h4">{bookItem.title}</Typography>
+        <StyledModalCard>
+          {/* <Typography variant="h4">{bookItem.title}</Typography>
           <Typography variant="subtitle1">{bookItem.author}</Typography>
-          <Typography variant="body1">{bookItem.description}</Typography>
+          <Typography variant="body1">{bookItem.description}</Typography> */}
 
-          <Button onClick={handleEdit} variant="outlined">
-            Edit
-          </Button>
-          <Button onClick={handleDelete} variant="outlined">
-            Delete
-          </Button>
-        </div>
+          {/* Editable TextFields */}
+          <TextField
+            sx={{ margin: "15px 0" }}
+            label="Title"
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+            fullWidth
+          />
+          <TextField
+            sx={{ margin: "15px 0" }}
+            label="Author"
+            value={editedAuthor}
+            onChange={(e) => setEditedAuthor(e.target.value)}
+            fullWidth
+          />
+          <TextField
+            sx={{ margin: "15px 0" }}
+            label="Genre"
+            value={editedGenre}
+            onChange={(e) => setEditedGenre(e.target.value)}
+            fullWidth
+          />
+          <TextField
+            sx={{ margin: "15px 0" }}
+            label="Description"
+            value={editedDescription}
+            onChange={(e) => setEditedDescription(e.target.value)}
+            multiline
+            fullWidth
+          />
+
+          <Divider light sx={{ margin: "10px 0" }} />
+          <StyledModalCardActions>
+            <Button
+              onClick={handleEdit}
+              variant="contained"
+              color="warning"
+              sx={{ width: 100 }}
+            >
+              Edit
+            </Button>
+            <Button
+              onClick={handleDelete}
+              variant="contained"
+              color="error"
+              sx={{ width: 100 }}
+            >
+              Delete
+            </Button>
+          </StyledModalCardActions>
+        </StyledModalCard>
       </Modal>
     </>
   );

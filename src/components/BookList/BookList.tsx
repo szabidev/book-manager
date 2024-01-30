@@ -1,6 +1,7 @@
 import BookListItem from "../BookListItem/BookListItem";
-import "../../shared/variables.css";
+
 import { StyledList } from "../../styles/BookListStyles";
+import "../../shared/variables.css";
 
 export interface Book {
   title: string;

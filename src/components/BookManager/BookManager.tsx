@@ -1,9 +1,12 @@
 import { Formik } from "formik";
-import BookFormFields from "../Forms/BookFormFields/BookFormFields";
-import { addBook, updateBook, deleteBook } from "../../helpers/requests";
-import { Book } from "../BookList/BookList";
 import { KeyedMutator } from "swr";
-import Button from "@mui/material/Button";
+
+import { ThemeProvider } from "@mui/material";
+import BookFormFields from "../Forms/BookFormFields/BookFormFields";
+import { Book } from "../BookList/BookList";
+import { AddNewBookBtn, colorTheme } from "../../styles/BookFormFieldsStyle";
+import "./BookManager.css";
+import { addBook } from "../../helpers/requests";
 
 const BookManager = ({
   mutateBooks,
@@ -21,34 +24,14 @@ const BookManager = ({
   const addNewBook = async (values: Book) => {
     console.log("function");
     try {
-      const response = await addBook(values);
+      const newBook: Book = { ...values, id: Date.now() };
+      const response = await addBook(newBook);
       console.log("Book added:", response);
       mutateBooks();
     } catch (error) {
       console.error("Error adding book:", error);
     }
   };
-
-  // const editBook = async (id: number, values: Book) => {
-  //   try {
-  //     const response = await updateBook(id, values);
-  //     mutateBooks();
-  //     console.log("Book updated:", response);
-  //   } catch (error) {
-  //     console.error("Error updating book:", error);
-  //   }
-  // };
-
-  // const removeBook = async (id: number) => {
-  //   try {
-  //     await deleteBook(id);
-  //     mutateBooks();
-  //     console.log("Book deleted:", id);
-  //   } catch (error) {
-  //     console.error("Error deleting book:", error);
-  //   }
-  // };
-  console.log("test");
 
   return (
     <Formik
@@ -57,11 +40,18 @@ const BookManager = ({
       onSubmit={(values) => addNewBook(values)}
     >
       {({ isSubmitting, handleSubmit }) => (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="bookform">
           <BookFormFields isSubmitting={isSubmitting} />
-          <Button type="submit" variant="outlined" disabled={isSubmitting}>
-            Add new book
-          </Button>
+          <ThemeProvider theme={colorTheme}>
+            <AddNewBookBtn
+              type="submit"
+              variant="contained"
+              disabled={isSubmitting}
+              color="primary"
+            >
+              Add new book
+            </AddNewBookBtn>
+          </ThemeProvider>
         </form>
       )}
     </Formik>

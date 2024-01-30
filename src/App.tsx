@@ -2,6 +2,7 @@ import { Suspense, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 
+import { ThemeProvider } from "@mui/material";
 import Header from "./components/UI/Header/Header";
 import Loading from "./components/UI/Loading/Loading";
 import Favorites from "./components/Favorites/Favorites";
@@ -9,12 +10,14 @@ import BookManager from "./components/BookManager/BookManager";
 import BookList, { Book } from "./components/BookList/BookList";
 
 import { deleteBook, getAllBooks, updateBook } from "./helpers/requests";
+import { loadingColorTheme } from "./styles/LoadingStyles";
 
 function App() {
-  const { data: books, error } = useSWR<Book[], Error>("/books", getAllBooks, {
-    revalidateOnFocus: true,
-    revalidateOnReconnect: true,
-  });
+  const { data: books, error } = useSWR<Book[], Error>(
+    "/books",
+    getAllBooks,
+    {}
+  );
   const [searchTerm, setSearchTerm] = useState<string>("");
   console.log(books);
 
@@ -25,7 +28,7 @@ function App() {
   const handleEdit = async (book: Book) => {
     try {
       const response = await updateBook(book.id!, book);
-      mutate("/books"); // assuming mutateBooks is not needed here
+      mutate("/books");
       console.log("Book updated:", response);
     } catch (error) {
       console.error("Error updating book:", error);
@@ -35,15 +38,13 @@ function App() {
   const handleDelete = async (id: number) => {
     try {
       await deleteBook(id);
-      mutate("/books", true);
+      mutate("/books");
       console.log("Book deleted:", id);
     } catch (error) {
       console.error("Error deleting book:", error);
     }
   };
 
-  // if error return div with error loading  books component
-  // if no books return Loading
   console.log(searchTerm);
 
   return (
@@ -57,11 +58,25 @@ function App() {
           <Route
             path="/"
             element={
-              <BookList
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                books={books || []}
-              />
+              <>
+                {error ? (
+                  <div>Error loading books. Please try again.</div>
+                ) : (
+                  <>
+                    {books ? (
+                      <BookList
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                        books={books}
+                      />
+                    ) : (
+                      <ThemeProvider theme={loadingColorTheme}>
+                        <Loading />
+                      </ThemeProvider>
+                    )}
+                  </>
+                )}
+              </>
             }
           />
           <Route path="/favorit" element={<Favorites />} />

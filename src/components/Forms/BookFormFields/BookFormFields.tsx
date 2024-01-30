@@ -1,4 +1,4 @@
-import { Field, useFormikContext } from "formik";
+import { Field } from "formik";
 
 import {
   StyledBox,
@@ -7,17 +7,12 @@ import {
 
 import "./BookFormFields.css";
 import "../../../shared/variables.css";
-import { Book } from "../../BookList/BookList";
 
 interface BookFormFieldsProps {
   isSubmitting: boolean;
-  // editBook: (book: Book) => void;
-  // removeBook: (id: number) => void;
 }
 
 const BookFormFields = ({ isSubmitting }: BookFormFieldsProps) => {
-  const { errors, touched } = useFormikContext();
-
   return (
     <StyledBox>
       <Field
@@ -27,6 +22,7 @@ const BookFormFields = ({ isSubmitting }: BookFormFieldsProps) => {
         label="Title"
         id="title"
         type="text"
+        InputLabelProps={{ color: "warning" }}
       />
       <Field
         component={StyledTextField}
@@ -35,6 +31,7 @@ const BookFormFields = ({ isSubmitting }: BookFormFieldsProps) => {
         id="author"
         label="Author"
         type="text"
+        InputLabelProps={{ color: "warning" }}
       />
       <Field
         component={StyledTextField}
@@ -45,14 +42,14 @@ const BookFormFields = ({ isSubmitting }: BookFormFieldsProps) => {
         type="text"
       />
       <Field
-        className="bookform__field"
+        multiline
+        fullWidth
+        component={StyledTextField}
         required
         name="description"
         id="description"
         label="Description"
-        placeholder="Book description..."
-        as="textarea"
-        rows={6}
+        type="text"
       />
     </StyledBox>
   );
