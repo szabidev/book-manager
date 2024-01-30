@@ -1,19 +1,21 @@
 import { Formik, FormikHelpers } from "formik";
-import { KeyedMutator } from "swr";
+import * as Yup from "yup";
 
 import { ThemeProvider, Typography } from "@mui/material";
 
+import StatusBar from "../UI/StatusBar/StatusBar";
 import BookFormFields from "../Forms/BookFormFields/BookFormFields";
 import { AddNewBookBtn, colorTheme } from "../../styles/BookFormFieldsStyle";
 import { Book } from "../../helpers/interfaces";
 import { addBook } from "../../helpers/requests";
+import { useStatus } from "../../shared/StatusContext";
 import "./BookManager.css";
 import "../../shared/variables.css";
 
 const BookManager = ({
   mutateBooks,
 }: {
-  mutateBooks: KeyedMutator<Book[]>;
+  mutateBooks: () => Promise<Book[] | undefined>;
 }) => {
   const initialValues: Book = {
     title: "",
@@ -23,6 +25,15 @@ const BookManager = ({
     id: null,
   };
 
+  const { statusBar, setStatusBar } = useStatus();
+
+  const validationSchema = Yup.object({
+    title: Yup.string().required("Title is required"),
+    author: Yup.string().required("Author is required"),
+    description: Yup.string().max(200).required("Description is required"),
+    genre: Yup.string().required("Genre is required"),
+  });
+
   const addNewBook = async (
     values: Book,
     { resetForm }: FormikHelpers<Book>
@@ -30,10 +41,21 @@ const BookManager = ({
     try {
       const newBook: Book = { ...values, id: Date.now() };
       await addBook(newBook);
-      mutateBooks();
+      await mutateBooks();
       resetForm();
+
+      setStatusBar({
+        open: true,
+        message: `${newBook.title} - ${newBook.author} added successfully!`,
+        severity: "success",
+      });
     } catch (error) {
       console.error("Error adding book:", error);
+      setStatusBar({
+        open: true,
+        message: "Error adding new book.Please try again!",
+        severity: "error",
+      });
     }
   };
 
@@ -51,6 +73,7 @@ const BookManager = ({
       <Formik
         enableReinitialize
         initialValues={initialValues}
+        validationSchema={validationSchema}
         onSubmit={(values, formikBag) => addNewBook(values, formikBag)}
       >
         {({ isSubmitting, handleSubmit }) => (
@@ -69,6 +92,12 @@ const BookManager = ({
           </form>
         )}
       </Formik>
+      <StatusBar
+        open={statusBar.open}
+        message={statusBar.message}
+        severity={statusBar.severity}
+        onClose={() => setStatusBar({ ...statusBar, open: false })}
+      />
     </>
   );
 };

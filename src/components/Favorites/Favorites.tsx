@@ -1,9 +1,11 @@
 import { Typography, Stack } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 
+import StatusBar from "../UI/StatusBar/StatusBar";
 import { StyledCard, StyledCardHeader } from "../../styles/BookListItemStyles";
 import { StyledList } from "../../styles/BookListStyles";
 import { Book } from "../../helpers/interfaces";
+import { useStatus } from "../../shared/StatusContext";
 import "../../shared/variables.css";
 
 interface FavoritesProps {
@@ -12,8 +14,14 @@ interface FavoritesProps {
 }
 
 const Favorites = ({ favoriteBooks, onRemove }: FavoritesProps) => {
+  const { statusBar, setStatusBar } = useStatus();
   const handleFavoriteRemove = (favorit: Book) => {
     onRemove(favorit);
+    setStatusBar({
+      open: true,
+      message: "Removed from favorites.",
+      severity: "error",
+    });
   };
 
   return (
@@ -21,6 +29,12 @@ const Favorites = ({ favoriteBooks, onRemove }: FavoritesProps) => {
       <Typography variant="h3" align="center" mt={2}>
         Favorites
       </Typography>
+      <StatusBar
+        open={statusBar.open}
+        message={statusBar.message}
+        severity={statusBar.severity}
+        onClose={() => setStatusBar({ ...statusBar, open: false })}
+      />
       <StyledList>
         {favoriteBooks.length !== 0 ? (
           favoriteBooks.map((favorite) => (

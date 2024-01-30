@@ -1,10 +1,9 @@
-import BookListItem from "../BookListItem/BookListItem";
-
 import { Typography } from "@mui/material";
+
+import BookListItem from "../BookListItem/BookListItem";
 import { StyledList } from "../../styles/BookListStyles";
 import { Book } from "../../helpers/interfaces";
 import "../../shared/variables.css";
-import { useState } from "react";
 
 interface BookListProps {
   books: Book[];
@@ -21,20 +20,10 @@ const BookList = ({
   onEdit,
   onDelete,
   onFavorit,
-  // isFavorit,
-  // setIsFavorit,
   favoriteBooks,
 }: BookListProps) => {
-  const [selectedBookId, setSelectedBookId] = useState<number | null>(null);
-
   const handleFavorit = (book: Book) => {
     onFavorit(book);
-
-    if (!favoriteBooks.some((favBook) => favBook.id === book.id)) {
-      setSelectedBookId(book.id);
-    } else {
-      setSelectedBookId(null);
-    }
   };
 
   return (
@@ -48,8 +37,6 @@ const BookList = ({
               onEdit={onEdit}
               onDelete={() => onDelete(book.id!)}
               onFavorit={() => handleFavorit(book)}
-              isSelected={selectedBookId === book.id}
-              setSelectedBookId={setSelectedBookId}
               favoriteBooks={favoriteBooks}
             />
           ))

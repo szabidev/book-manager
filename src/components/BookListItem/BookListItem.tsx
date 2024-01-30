@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { mutate } from "swr";
 
 import {
   Button,
@@ -24,15 +25,12 @@ import {
   StyledModalCardActions,
 } from "../../styles/BookListItemStyles";
 import { Book } from "../../helpers/interfaces";
-import { mutate } from "swr";
 
 interface BookListItemProps {
   bookItem: Book;
   onEdit: (book: Book) => void;
   onDelete: (id: number | null) => void;
   onFavorit: (book: Book) => void;
-  isSelected: boolean;
-  setSelectedBookId: (id: number | null) => void;
   favoriteBooks: Book[];
 }
 
@@ -41,8 +39,6 @@ const BookListItem = ({
   onEdit,
   onDelete,
   onFavorit,
-  isSelected,
-  setSelectedBookId,
   favoriteBooks,
 }: BookListItemProps) => {
   const [isChecked, setChecked] = useState<boolean>(
@@ -65,7 +61,6 @@ const BookListItem = ({
     setChecked(!isChecked);
     setIsRead(!isRead);
     localStorage.setItem(`readStatus_${bookItem.id}`, (!isChecked).toString());
-    setSelectedBookId(bookItem.id);
   };
 
   const handleOpenModal = () => {
