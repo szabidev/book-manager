@@ -10,7 +10,7 @@ interface FormValues {
   author: string;
   description: string;
   genre: string;
-  id?: string;
+  id: number;
 }
 
 interface BookFormProps {
@@ -24,10 +24,9 @@ const BookForm = ({ initialValues, onSubmit }: BookFormProps) => {
     validationSchema: Yup.object({
       title: Yup.string().required("Title is required"),
       author: Yup.string().required("Author is required"),
+      // max 200 characters
       description: Yup.string().required("Description is required"),
       genre: Yup.string().required("Genre is required"),
-      // id?
-      //   url: Yup.string().url("Invalid URL"),
     }),
     onSubmit: (values) => {
       onSubmit(values);

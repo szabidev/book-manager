@@ -1,5 +1,6 @@
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
+import "../shared/variables.css";
 
 export const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
@@ -8,9 +9,13 @@ export const SearchIconWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  borderBottom: "1px solid var(--gray)",
+  margin: "0 10px ",
+  "@media screen and (max-width:768px)": {
+    border: "none",
+  },
 }));
 
-// apply pointer cursor
 export const StyledTextField = styled(TextField)(({ theme }) => ({
   fontWeight: "400",
   letterSpacing: "1px",
@@ -32,5 +37,8 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
   },
   "& .MuiInputBase-input::placeholder": {
     color: "var(--white)",
+  },
+  "@media screen and (min-width:420px and max-width:768px)": {
+    width: "50%",
   },
 }));

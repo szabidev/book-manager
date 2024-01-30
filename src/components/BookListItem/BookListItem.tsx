@@ -1,54 +1,71 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import {
   Button,
+  CardContent,
+  FormGroup,
+  Checkbox,
   Divider,
   IconButton,
   Modal,
   Typography,
   TextField,
+  Stack,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import EditIcon from "@mui/icons-material/Edit";
 
 import {
   StyledCard,
   StyledCardActions,
+  StyledCardHeader,
+  StyledFormControlLabel,
   StyledModalCard,
   StyledModalCardActions,
 } from "../../styles/BookListItemStyles";
-import { Book } from "../BookList/BookList";
+import { Book } from "../../helpers/interfaces";
 import { mutate } from "swr";
 
 interface BookListItemProps {
   bookItem: Book;
   onEdit: (book: Book) => void;
   onDelete: (id: number | null) => void;
+  onFavorit: (book: Book) => void;
+  isSelected: boolean;
+  setSelectedBookId: (id: number | null) => void;
+  favoriteBooks: Book[];
 }
 
-const BookListItem = ({ bookItem, onEdit, onDelete }: BookListItemProps) => {
-  const [isChecked, setChecked] = useState<boolean>(false);
-  const [isFavorit, setIsFavorit] = useState<boolean>(false);
+const BookListItem = ({
+  bookItem,
+  onEdit,
+  onDelete,
+  onFavorit,
+  isSelected,
+  setSelectedBookId,
+  favoriteBooks,
+}: BookListItemProps) => {
+  const [isChecked, setChecked] = useState<boolean>(
+    localStorage.getItem(`readStatus_${bookItem.id}`) === "true"
+  );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
-  // for edit - delete it
   const [editedTitle, setEditedTitle] = useState<string>(bookItem.title);
   const [editedAuthor, setEditedAuthor] = useState<string>(bookItem.author);
   const [editedDescription, setEditedDescription] = useState<string>(
     bookItem.description
   );
   const [editedGenre, setEditedGenre] = useState<string>(bookItem.genre);
+  const [isRead, setIsRead] = useState<boolean>(false);
+
+  const isBookFavorited = favoriteBooks.some(
+    (favBook) => favBook.id === bookItem.id
+  );
 
   const handleCheckboxChange = () => {
     setChecked(!isChecked);
-  };
-
-  const handleFavorit = () => {
-    setIsFavorit(!isFavorit);
+    setIsRead(!isRead);
+    localStorage.setItem(`readStatus_${bookItem.id}`, (!isChecked).toString());
+    setSelectedBookId(bookItem.id);
   };
 
   const handleOpenModal = () => {
@@ -66,6 +83,7 @@ const BookListItem = ({ bookItem, onEdit, onDelete }: BookListItemProps) => {
       title: editedTitle,
       author: editedAuthor,
       description: editedDescription,
+      genre: editedGenre,
     };
     onEdit(updatedBook);
     mutate("/books");
@@ -77,15 +95,37 @@ const BookListItem = ({ bookItem, onEdit, onDelete }: BookListItemProps) => {
     mutate("/books");
   };
 
+  useEffect(() => {
+    const isReadStatus = localStorage.getItem(`readStatus_${bookItem.id}`);
+    if (isReadStatus !== null) {
+      setChecked(isReadStatus === "true");
+    }
+  }, [bookItem.id]);
+
   return (
     <>
-      <StyledCard onClick={handleOpenModal}>
-        <CardHeader
-          title={bookItem.title}
+      <StyledCard>
+        <StyledCardHeader
+          title={
+            <>
+              {bookItem.title}
+              <Stack
+                direction="row"
+                alignItems="center"
+                gap={1}
+                onClick={handleOpenModal}
+                sx={{ cursor: "pointer" }}
+              >
+                <EditIcon />
+                <Typography variant="body1">Edit</Typography>
+              </Stack>
+            </>
+          }
           subheader={
             <>
               {bookItem.author}
               {` - ${bookItem.genre}`}
+              <p></p>
             </>
           }
         />
@@ -93,30 +133,40 @@ const BookListItem = ({ bookItem, onEdit, onDelete }: BookListItemProps) => {
           <Typography>{bookItem.description}</Typography>
         </CardContent>
         <StyledCardActions disableSpacing>
-          <IconButton aria-label="favorit" onClick={handleFavorit}>
-            <FavoriteIcon color={`${isFavorit ? "error" : "action"}`} />
+          <IconButton
+            aria-label="favorit"
+            onClick={(e) => {
+              e.stopPropagation();
+              onFavorit(bookItem);
+            }}
+          >
+            <FavoriteIcon color={`${isBookFavorited ? "error" : "action"}`} />
           </IconButton>
           <FormGroup>
-            <FormControlLabel
+            <StyledFormControlLabel
               control={
                 <Checkbox
                   color="success"
                   checked={isChecked}
                   onChange={handleCheckboxChange}
+                  sx={{ marginRight: "10px" }}
                 />
               }
-              label="Read"
+              label={isRead ? "Unread" : "Read"}
             />
           </FormGroup>
         </StyledCardActions>
       </StyledCard>
-      <Modal open={isModalOpen} onClose={handleCloseModal}>
+      <Modal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        sx={{
+          "@media screen and (max-height:500px)": {
+            overflowY: "auto",
+          },
+        }}
+      >
         <StyledModalCard>
-          {/* <Typography variant="h4">{bookItem.title}</Typography>
-          <Typography variant="subtitle1">{bookItem.author}</Typography>
-          <Typography variant="body1">{bookItem.description}</Typography> */}
-
-          {/* Editable TextFields */}
           <TextField
             sx={{ margin: "15px 0" }}
             label="Title"

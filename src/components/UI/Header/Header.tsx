@@ -9,9 +9,10 @@ import "../../../shared/variables.css";
 
 interface HeaderProps {
   onSearchSubmit: (searchTerm: string) => void;
+  onReset: () => void;
 }
 
-const Header = ({ onSearchSubmit }: HeaderProps) => {
+const Header = ({ onSearchSubmit, onReset }: HeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -25,7 +26,7 @@ const Header = ({ onSearchSubmit }: HeaderProps) => {
 
   return (
     <StyledAppBar color="transparent">
-      <SearchBar onSearchSubmit={onSearchSubmit} />
+      <SearchBar onSearchSubmit={onSearchSubmit} onReset={onReset} />
       <div className="logo" onClick={handleLogoClick}>
         <AutoStories sx={{ color: "var(--gray)", fontSize: 40 }} />
         <p className="logo__name">My Library</p>

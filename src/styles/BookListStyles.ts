@@ -3,8 +3,8 @@ import { styled } from "@mui/material/styles";
 
 export const StyledList = styled(List)(() => ({
   width: "800px",
-  height: "80vh",
-  margin: "50px auto",
+  height: "79vh",
+  margin: "65px auto 10px auto",
   backgroundColor: "var(--white)",
   borderRadius: 2,
   opacity: 0.75,
@@ -20,5 +20,8 @@ export const StyledList = styled(List)(() => ({
   "&::-webkit-scrollbar-thumb": {
     backgroundColor: "rgba(0,0,0,.3)",
     borderRadius: "12px",
+  },
+  "@media screen and (max-width:768px)": {
+    width: "90%",
   },
 }));

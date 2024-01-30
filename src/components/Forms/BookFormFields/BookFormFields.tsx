@@ -22,7 +22,6 @@ const BookFormFields = ({ isSubmitting }: BookFormFieldsProps) => {
         label="Title"
         id="title"
         type="text"
-        InputLabelProps={{ color: "warning" }}
       />
       <Field
         component={StyledTextField}
@@ -31,7 +30,6 @@ const BookFormFields = ({ isSubmitting }: BookFormFieldsProps) => {
         id="author"
         label="Author"
         type="text"
-        InputLabelProps={{ color: "warning" }}
       />
       <Field
         component={StyledTextField}

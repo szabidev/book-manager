@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
-// import * as yup from "yup";
 
-import { Search } from "@mui/icons-material";
+import { Search, Clear } from "@mui/icons-material";
+import { Tooltip, Button } from "@mui/material";
 import {
   SearchIconWrapper,
   StyledTextField,
@@ -10,23 +10,27 @@ import "../../../shared/variables.css";
 
 interface SearchBarProps {
   onSearchSubmit: (searchTerm: string) => void;
+  onReset: () => void;
 }
 
-const SearchBar = ({ onSearchSubmit }: SearchBarProps) => {
+const SearchBar = ({ onSearchSubmit, onReset }: SearchBarProps) => {
   const formik = useFormik({
     initialValues: {
       search: "",
     },
     onSubmit: (values, { resetForm }) => {
       onSearchSubmit(values.search);
-      console.log("Submitted:", values.search);
-
       resetForm();
     },
   });
 
   const handleSearch = () => {
     formik.handleSubmit();
+  };
+
+  const handleReset = () => {
+    formik.resetForm();
+    onReset();
   };
 
   return (
@@ -43,10 +47,12 @@ const SearchBar = ({ onSearchSubmit }: SearchBarProps) => {
           onBlur={formik.handleBlur}
           value={formik.values.search}
         />
+        <Tooltip title="Reset" arrow>
+          <Button onClick={handleReset}>
+            <Clear sx={{ color: "var(--gray)" }} />
+          </Button>
+        </Tooltip>
       </SearchIconWrapper>
-      {/* {formik.touched.search && formik.errors.search && (
-        <div style={{ color: "var(--error)" }}>{formik.errors.search}</div>
-      )} */}
     </form>
   );
 };

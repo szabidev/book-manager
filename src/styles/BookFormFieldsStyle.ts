@@ -7,7 +7,7 @@ export const StyledBox = styled(Box)(() => ({
   border: "1px solid var(--gray)",
   borderRadius: "4px",
   width: "700px",
-  margin: "100px auto 50px auto",
+  margin: "50px auto",
   padding: "10px",
   display: "flex",
   flexDirection: "column",
@@ -22,6 +22,9 @@ export const StyledTextField = styled(TextField)(() => ({
   "& label.Mui-focused": {
     color: "#A0AAB4",
   },
+  "& .MuiInputLabel-root": {
+    color: "white",
+  },
   "& .MuiInput-underline:after": {
     borderBottomColor: "#B2BAC2",
   },
@@ -35,6 +38,10 @@ export const StyledTextField = styled(TextField)(() => ({
     "&.Mui-focused fieldset": {
       borderColor: "#6F7E8C",
     },
+  },
+  "& .MuiInputBase-input": {
+    color: "white",
+    letterSpacing: "1px",
   },
 }));
 
