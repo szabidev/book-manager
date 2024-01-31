@@ -3,16 +3,17 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import useSWR from "swr";
 
 import { ThemeProvider, Typography } from "@mui/material";
+
 import Header from "./components/UI/Header/Header";
 import Loading from "./components/UI/Loading/Loading";
 import Favorites from "./components/Favorites/Favorites";
 import BookManager from "./components/BookManager/BookManager";
 import BookList from "./components/BookList/BookList";
+import StatusBar from "./components/UI/StatusBar/StatusBar";
 import { Book } from "./helpers/interfaces";
-
 import { deleteBook, getAllBooks, updateBook } from "./helpers/requests";
 import { loadingColorTheme } from "./styles/LoadingStyles";
-import StatusBar, { StatusBarProps } from "./components/UI/StatusBar/StatusBar";
+import { StatusBarProps } from "./helpers/interfaces";
 import { StatusProvider } from "./shared/StatusContext";
 
 function App() {
@@ -105,7 +106,6 @@ function App() {
   };
 
   const handleCloseStatusBar = () => {
-    // Close the status bar
     setStatusBar((prev) => ({ ...prev, open: false }));
   };
 

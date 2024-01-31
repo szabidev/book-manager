@@ -1,7 +1,6 @@
-import { Box, Button } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { TextField } from "formik-mui";
-import { createTheme } from "@mui/material";
+import { Box, Button, createTheme } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 export const StyledBox = styled(Box)(() => ({
   border: "1px solid var(--gray)",

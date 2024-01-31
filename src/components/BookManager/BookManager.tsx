@@ -51,6 +51,7 @@ const BookManager = ({
       });
     } catch (error) {
       console.error("Error adding book:", error);
+
       setStatusBar({
         open: true,
         message: "Error adding new book.Please try again!",

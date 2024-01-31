@@ -30,5 +30,3 @@ export const StyledLink = styled(RouterLink)(() => ({
     color: "var(--white)",
   },
 }));
-
-// use styled for responsiveness

@@ -4,10 +4,6 @@ interface StatusContextProps {
   children: ReactNode;
 }
 
-// interface StatusProviderProps {
-//   children: ReactNode;
-// }
-
 interface StatusBarProps {
   open: boolean;
   message: string;

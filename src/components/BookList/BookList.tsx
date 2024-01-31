@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material";
 
 import BookListItem from "../BookListItem/BookListItem";
+
 import { StyledList } from "../../styles/BookListStyles";
 import { Book } from "../../helpers/interfaces";
 import "../../shared/variables.css";

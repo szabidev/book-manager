@@ -1,14 +1,6 @@
-import React from "react";
 import { Alert, Snackbar } from "@mui/material";
 
-type Severity = "success" | "warning" | "error" | "info";
-
-export interface StatusBarProps {
-  open: boolean;
-  onClose?: () => void;
-  message: string;
-  severity: Severity;
-}
+import { StatusBarProps } from "../../../helpers/interfaces";
 
 const StatusBar = ({ open, onClose, message, severity }: StatusBarProps) => {
   return (

@@ -15,6 +15,7 @@ interface FavoritesProps {
 
 const Favorites = ({ favoriteBooks, onRemove }: FavoritesProps) => {
   const { statusBar, setStatusBar } = useStatus();
+
   const handleFavoriteRemove = (favorit: Book) => {
     onRemove(favorit);
     setStatusBar({
