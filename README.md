@@ -28,4 +28,5 @@ Welcome to the Personal Library Manager application! This React.js-based project
 2. Install dependencies: **npm install**
 3. Run the application: **npm start**
 4. Access the application in your browser at: **http://localhost:3000**
+5. mock server: https://github.com/szabidev/book-manager-mock-server
 
